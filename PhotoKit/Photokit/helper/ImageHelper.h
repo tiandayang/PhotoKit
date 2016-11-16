@@ -30,4 +30,8 @@
 + (void)getAlbumList:(void(^)(NSArray<PHFetchResult *> *albumList))complete;
 
 + (void)getImageWithAsset:(PHAsset*)asset complete:(void(^)(UIImage*image))complete;
+
++ (BOOL)isOpenAuthority;
+
++ (void)jumpToSetting;
 @end

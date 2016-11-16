@@ -46,6 +46,21 @@
 #pragma mark - LoadData
 - (void)loadAlbums
 {
+    if (![ImageHelper isOpenAuthority]) {
+        
+       UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"您未打开照片权限" message:nil preferredStyle:UIAlertControllerStyleAlert];
+               [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self dismiss];
+        }]];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"去设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [ImageHelper jumpToSetting];
+        }]];
+
+        [self presentViewController:alertController animated:YES completion:nil];
+
+        return;
+    }
+    
     [ImageHelper getAlbumList:^(NSArray<PHFetchResult *> *albumList) {
         self.dataArray = albumList.mutableCopy;
     }];

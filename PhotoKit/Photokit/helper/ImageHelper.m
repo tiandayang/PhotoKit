@@ -43,6 +43,17 @@
     
 
 }
+
++ (BOOL)isOpenAuthority
+{
+    return  PHAuthorizationStatusAuthorized == [PHPhotoLibrary authorizationStatus];
+}
+
++ (void)jumpToSetting
+{
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+}
+
 @end
 
 @implementation ImageModel
