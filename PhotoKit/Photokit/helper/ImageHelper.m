@@ -46,7 +46,15 @@
 
 + (BOOL)isOpenAuthority
 {
-    return  PHAuthorizationStatusAuthorized == [PHPhotoLibrary authorizationStatus];
+    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized ) {
+        return YES;
+    }
+    else if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusDenied )
+        return NO;
+    else if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusRestricted )
+        return YES;
+    else
+        return YES;
 }
 
 + (void)jumpToSetting
