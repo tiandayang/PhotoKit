@@ -15,7 +15,7 @@
 @property (nonatomic, copy) void(^okClickComplete)(NSArray<ImageModel *> *images);
 
 /**
- 图片的可选数量，默认为10
+ 图片的可选数量，默认为9
  */
 @property (nonatomic, assign) NSUInteger maximumNumberOfSelection;
 @property (nonatomic, copy) NSString *rightItemTitle;

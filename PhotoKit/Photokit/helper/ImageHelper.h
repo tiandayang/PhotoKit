@@ -14,7 +14,7 @@
 
 @interface ImageModel : NSObject
 
-@property (nonatomic, strong) NSURL *imagePath; // 图片的路径
+@property (nonatomic, copy)   NSString *identifier; // 图片的标识
 
 @property (nonatomic, assign) NSInteger index;  // 选中的索引
 

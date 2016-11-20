@@ -116,7 +116,7 @@ static CGFloat const kItemsSpace = 5.0;
         ImageCollectionViewCell *cell = (ImageCollectionViewCell*)[collectionView cellForItemAtIndexPath:indexPath];
         if ([cell.asset.selected boolValue]) {
             for (ImageModel *subItem in self.selectArray.mutableCopy) {
-                if ([subItem.imagePath.absoluteString isEqualToString:((NSURL*)cell.asset.imagePath).absoluteString ]) {
+                if ([subItem.identifier isEqualToString:cell.asset.localIdentifier]) {
                     [self.selectArray removeObject:subItem];
                     break;
                 }
@@ -130,7 +130,7 @@ static CGFloat const kItemsSpace = 5.0;
                 return;
             }
             ImageModel *item = [ImageModel new];
-            item.imagePath = cell.asset.imagePath;
+            item.identifier = cell.asset.localIdentifier;
             item.asset = cell.asset;
             [self.selectArray addObject:item];
         }

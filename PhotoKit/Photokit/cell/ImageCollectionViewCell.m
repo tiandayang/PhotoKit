@@ -89,24 +89,12 @@
         self.selectImageView.hidden = YES;
         self.indexLabel.hidden = YES;
     }
-    if (!_asset.imagePath) {
-        PHImageManager * imageManager = [PHImageManager defaultManager];
-        [imageManager requestImageDataForAsset:asset options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
-            NSURL *imagePath = info[@"PHImageFileURLKey"];
-            _asset.imagePath = imagePath;
-        }];
-    }
-    else{
         for (ImageModel *item in self.selectArray) {
-            if ([item.imagePath.absoluteString isEqualToString:((NSURL*)_asset.imagePath).absoluteString]) {
+            if ([item.identifier isEqualToString:_asset.localIdentifier]) {
                 self.indexLabel.text = [NSString stringWithFormat:@"%ld",item.index];
                 break;
             }
         }
-        
-    }
-    
-    
     if (!_asset.thumbImage) {
         PHImageManager * imageManager = [PHImageManager defaultManager];
         [imageManager requestImageForAsset:asset targetSize:CGSizeMake(ITEMWIDTH,ITEMWIDTH) contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
