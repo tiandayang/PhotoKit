@@ -115,9 +115,11 @@ static CGFloat const kItemsSpace = 5.0;
         
         ImageCollectionViewCell *cell = (ImageCollectionViewCell*)[collectionView cellForItemAtIndexPath:indexPath];
         if ([cell.asset.selected boolValue]) {
+            int count = -1;
             for (ImageModel *subItem in self.selectArray.mutableCopy) {
+                count ++;
                 if ([subItem.identifier isEqualToString:cell.asset.localIdentifier]) {
-                    [self.selectArray removeObject:subItem];
+                    [self.selectArray removeObjectAtIndex:count];
                     break;
                 }
             }
@@ -134,9 +136,6 @@ static CGFloat const kItemsSpace = 5.0;
             item.asset = cell.asset;
             [self.selectArray addObject:item];
         }
-        [self.selectArray enumerateObjectsUsingBlock:^(ImageModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            obj.index = ++idx;
-        }];
         [self changeCurrentSelectedItemIndexWithCell:cell];
     }
     

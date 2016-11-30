@@ -23,6 +23,10 @@
     [self createUI];
 }
 
+- (IBAction)clear:(id)sender {
+    [self.imageDataArray removeAllObjects];
+    [self.collectionView reloadData];
+}
 
 - (IBAction)presentAlbum:(id)sender {
     AlbumListViewController *albumListVC = [[AlbumListViewController alloc] init];
@@ -36,7 +40,7 @@
             
             [images enumerateObjectsUsingBlock:^(ImageModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 if (obj.asset) {
-                    [ImageHelper getImageWithAsset:obj.asset complete:^(UIImage *image) {
+                    [ImageHelper getImageDataWithAsset:obj.asset complete:^(UIImage *image) {
                         if (image) {
                             [weakSelf.imageDataArray addObject:image];
                         }
@@ -55,10 +59,6 @@
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:albumListVC];
 
     [self presentViewController:nav animated:YES completion:nil];
-    
-    
-    
-    
 }
 
 #pragma mark - collectionView delegate &datasource 
@@ -73,9 +73,8 @@
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:self.imageDataArray[indexPath.row]];
-    
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
     cell.backgroundView = imageView;
-    cell.backgroundView.contentMode = UIViewContentModeScaleAspectFit;
     return cell;
     
 }
@@ -85,7 +84,7 @@
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
-        layout.itemSize = CGSizeMake(WINDOW_WIDTH, WINDOW_WIDTH);
+        layout.itemSize = self.view.frame.size;
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
         collectionView.pagingEnabled = YES;

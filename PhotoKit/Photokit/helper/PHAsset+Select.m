@@ -11,8 +11,6 @@
 @implementation PHAsset (Select)
 static void * PHAssetSelectedKey    = (void *)@"PHAssetSelectedKey";
 static void * PHAssetThumbImageKey  = (void *)@"PHAssetThumbImageKey";
-static void * PHAssetImagePathKey   = (void *)@"PHAssetImagePathKey";
-static void * PHAssetIndexKey       = (void *)@"PHAssetIndexKey";
 
 - (void)setSelected:(id)selected
 {
@@ -25,8 +23,6 @@ static void * PHAssetIndexKey       = (void *)@"PHAssetIndexKey";
 }
 
 
-
-
 - (void)setThumbImage:(id)thumbImage
 {
     objc_setAssociatedObject(self, PHAssetThumbImageKey, thumbImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
@@ -35,31 +31,6 @@ static void * PHAssetIndexKey       = (void *)@"PHAssetIndexKey";
 - (id)thumbImage
 {
     return objc_getAssociatedObject(self, PHAssetThumbImageKey);
-}
-
-
-
-
-- (void)setImagePath:(id)imagePath
-{
-    objc_setAssociatedObject(self, PHAssetImagePathKey, imagePath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-}
-
-- (id)imagePath
-{
-    return objc_getAssociatedObject(self, PHAssetImagePathKey);
-}
-
-
-- (void)setIndex:(id)index
-{
-    objc_setAssociatedObject(self, PHAssetIndexKey, index, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-
-}
-
-- (id)index
-{
-    return objc_getAssociatedObject(self, PHAssetIndexKey);
 }
 
 @end

@@ -8,7 +8,6 @@
 
 #import "AlbumListViewController.h"
 #import "AlbumListTableViewCell.h"
-#import "UIImage+Common.h"
 #import "ImageCollectionViewController.h"
 
 @interface AlbumListViewController ()<UITableViewDelegate,UITableViewDataSource>
@@ -118,17 +117,9 @@
         
     }
     PHAsset *asset = fetchResult[0];
-    PHImageManager *imageManager = [PHImageManager defaultManager];
-    [imageManager requestImageForAsset:asset targetSize:CGSizeMake(120,120) contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            UIImage *image = [result imageCompressForTargetSize:CGSizeMake(120,120)];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                albumListCell.coverImageView.image = image;
-            });
-        });
+    [ImageHelper getImageWithAsset:asset targetSize:CGSizeMake(120,120) complete:^(UIImage *image) {
+        albumListCell.coverImageView.image = image;
     }];
-    
-
     return cell;
 }
 

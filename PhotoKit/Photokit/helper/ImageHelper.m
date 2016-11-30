@@ -31,7 +31,7 @@
     complete?complete(list):nil;
 }
 
-+ (void)getImageWithAsset:(PHAsset *)asset complete:(void (^)(UIImage *))complete
++ (void)getImageDataWithAsset:(PHAsset *)asset complete:(void (^)(UIImage *))complete
 {
     PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
     option.synchronous = YES;
@@ -42,6 +42,18 @@
     }];
     
 
+}
+
++ (void)getImageWithAsset:(PHAsset*)asset targetSize:(CGSize)size complete:(void (^)(UIImage *))complete{
+    PHImageManager *imageManager = [PHImageManager defaultManager];
+    [imageManager requestImageForAsset:asset targetSize:size contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            UIImage *image = [result imageCompressForTargetSize:size];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                complete?complete(image):nil;
+            });
+        });
+    }];
 }
 
 + (BOOL)isOpenAuthority

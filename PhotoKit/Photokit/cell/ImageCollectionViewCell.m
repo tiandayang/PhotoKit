@@ -7,7 +7,6 @@
 //
 
 #import "ImageCollectionViewCell.h"
-#import "UIImage+Common.h"
 #import "Masonry.h"
 #define ITEMWIDTH      2 * (WINDOW_WIDTH - 10)/3.0
 
@@ -61,14 +60,14 @@
     NSTimeInterval timeIntercal = 0.1;
     
     [UIView animateWithDuration:timeIntercal animations:^{
-        self.imageView.transform = CGAffineTransformMakeScale(1.03, 1.03);
+        self.transform = CGAffineTransformMakeScale(1.03, 1.03);
         
     } completion:^(BOOL finished) {
         
         if (finished) {
             [UIView animateWithDuration:timeIntercal animations:^{
                 
-                self.imageView.transform = CGAffineTransformMakeScale(1.0, 1.0);
+                self.transform = CGAffineTransformIdentity;
                 
             } completion:complete];
         }
@@ -89,22 +88,19 @@
         self.selectImageView.hidden = YES;
         self.indexLabel.hidden = YES;
     }
+        int count = 0;
         for (ImageModel *item in self.selectArray) {
+            count ++;
             if ([item.identifier isEqualToString:_asset.localIdentifier]) {
-                self.indexLabel.text = [NSString stringWithFormat:@"%ld",item.index];
+                self.indexLabel.text = [NSString stringWithFormat:@"%d",count];
                 break;
             }
         }
     if (!_asset.thumbImage) {
-        PHImageManager * imageManager = [PHImageManager defaultManager];
-        [imageManager requestImageForAsset:asset targetSize:CGSizeMake(ITEMWIDTH,ITEMWIDTH) contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-            dispatch_async(dispatch_get_global_queue(0, 0), ^{
-                UIImage *image = [result imageCompressForTargetSize:CGSizeMake(ITEMWIDTH,ITEMWIDTH)];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    self.imageView.image = image;
-                    _asset.thumbImage = image;
-                });
-            });
+    
+        [ImageHelper getImageWithAsset:_asset targetSize:CGSizeMake(ITEMWIDTH,ITEMWIDTH) complete:^(UIImage * image) {
+            self.imageView.image = image;
+            _asset.thumbImage = image;
         }];
     }
     else{

@@ -13,8 +13,4 @@
 
 @property (nonatomic,assign)id thumbImage;
 
-@property (nonatomic,assign)id imagePath;
-
-@property (nonatomic,assign)id index;
-
 @end
