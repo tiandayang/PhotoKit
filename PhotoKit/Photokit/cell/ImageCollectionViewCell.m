@@ -54,7 +54,6 @@
     self.indexLabel.hidden = YES;
 }
 
-
 - (void)updteImageIsSelected:(BOOL)imageIsSelected complete:(void(^)(BOOL isFinish))complete;
 {
     NSTimeInterval timeIntercal = 0.1;
@@ -74,8 +73,6 @@
         
     }];
 }
-
-
 
 - (void)setAsset:(PHAsset *)asset
 {

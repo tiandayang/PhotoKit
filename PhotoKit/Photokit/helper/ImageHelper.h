@@ -9,13 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <Photos/Photos.h>
 #import "PHAsset+Select.h"
-#import "UIImage+Common.h"
+#import "UIImage+Clip.h"
 
 typedef NS_ENUM(NSInteger, AlbumType) {
     AlbumTypeDefault   = 0, // 默认
     AlbumTypeCumstom   = 1  // 自定义
 };
-
 
 #define WINDOW_WIDTH   [UIScreen mainScreen].bounds.size.width
 

@@ -107,7 +107,7 @@
         albumListCell.albumNameLabel.text = collection.localizedTitle;
         if ([collection isKindOfClass:[PHAssetCollection class]]) {
             PHAssetCollection * assetCollection = (PHAssetCollection *)collection;
-            PHFetchResult * assetsFetchResult = [PHAsset fetchAssetsInAssetCollection:assetCollection options:nil];
+            PHFetchResult * assetsFetchResult   = [PHAsset fetchAssetsInAssetCollection:assetCollection options:nil];
             albumListCell.albumDetailLabel.text = [NSString stringWithFormat:@"%ld", (long)assetsFetchResult.count];
             fetchResult = assetsFetchResult;
         }
@@ -149,12 +149,13 @@
 - (void)jumpToImageDetailWithGroup:(PHFetchResult *)fetchResult isAnimate:(BOOL)isAnimate title:(NSString*)title
 {
     ImageCollectionViewController *imagePickerController = [[ImageCollectionViewController alloc] init];
-    imagePickerController.isAscend = self.isAscend;
-    imagePickerController.assetResult = fetchResult;
-    imagePickerController.title = title;
-    imagePickerController.rightItemTitle = self.rightTitle ?: @"发送";
-    imagePickerController.okClickComplete = self.okClickComplete;
-    imagePickerController.maximumNumberOfSelection = self.maxSelectCount;
+    imagePickerController.isAscend                       = self.isAscend;
+    imagePickerController.assetResult                    = fetchResult;
+    imagePickerController.title                          = title;
+    imagePickerController.albumType                      = self.albumType;
+    imagePickerController.rightItemTitle                 = self.rightTitle ?: @"发送";
+    imagePickerController.okClickComplete                = self.okClickComplete;
+    imagePickerController.maximumNumberOfSelection       = self.maxSelectCount>=0?self.maxSelectCount:0;
     [self.navigationController pushViewController:imagePickerController animated:isAnimate];
 }
 

@@ -19,6 +19,7 @@
  */
 @property (nonatomic, assign) NSUInteger maximumNumberOfSelection;
 @property (nonatomic, copy) NSString *rightItemTitle;
+@property (nonatomic,assign) AlbumType albumType;      // 相册的类型，用途
 
-@property (nonatomic, assign) BOOL isAscend;
+@property (nonatomic, assign) BOOL isAscend;  
 @end

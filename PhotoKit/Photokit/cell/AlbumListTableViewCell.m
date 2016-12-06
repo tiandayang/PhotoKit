@@ -21,11 +21,6 @@ const NSInteger kLeftEdge               = 14;
     return self;
 }
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    [self createUI];
-}
-
 - (void)createUI
 {
     _coverImageView = ({
