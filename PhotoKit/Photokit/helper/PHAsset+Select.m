@@ -12,18 +12,18 @@
 static void * PHAssetSelectedKey    = (void *)@"PHAssetSelectedKey";
 static void * PHAssetThumbImageKey  = (void *)@"PHAssetThumbImageKey";
 
-- (void)setSelected:(id)selected
+- (void)setSelected:(BOOL)selected
 {
-    objc_setAssociatedObject(self, PHAssetSelectedKey, selected, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, PHAssetSelectedKey, @(selected), OBJC_ASSOCIATION_ASSIGN);
 }
 
-- (id)selected
+- (BOOL)selected
 {
-    return objc_getAssociatedObject(self, PHAssetSelectedKey);
+    return [objc_getAssociatedObject(self, PHAssetSelectedKey) boolValue];
 }
 
 
-- (void)setThumbImage:(id)thumbImage
+- (void)setThumbImage:(UIImage*)thumbImage
 {
     objc_setAssociatedObject(self, PHAssetThumbImageKey, thumbImage, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }

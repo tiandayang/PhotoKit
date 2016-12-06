@@ -11,15 +11,20 @@
 #import "PHAsset+Select.h"
 #import "UIImage+Common.h"
 
+typedef NS_ENUM(NSInteger, AlbumType) {
+    AlbumTypeDefault   = 0, // 默认
+    AlbumTypeCumstom   = 1  // 自定义
+};
+
+
 #define WINDOW_WIDTH   [UIScreen mainScreen].bounds.size.width
 
 @interface ImageModel : NSObject
 
-@property (nonatomic, copy)   NSString *identifier; // 图片的标识
-
 @property (nonatomic, strong) UIImage *thumbImage; // 图片
 
-@property (nonatomic, strong) PHAsset * asset;   
+@property (nonatomic, strong) PHAsset * asset;
+
 @end
 
 
@@ -31,7 +36,7 @@
 
  @param complete callback
  */
-+ (void)getAlbumList:(void(^)(NSArray<PHFetchResult *> *albumList))complete;
++ (void)getAlbumListWithAscend:(BOOL)isAscend complete:(void(^)(NSArray<PHFetchResult *> *albumList))complete;
 
 /**
  通过 asset  获取 imageData
@@ -39,7 +44,14 @@
  @param asset asset
  @param complete callback
  */
-+ (void)getImageDataWithAsset:(PHAsset*)asset complete:(void(^)(UIImage*image))complete;
+
+/**
+ 通过 asset  获取 imageData
+
+ @param asset asset
+ @param complete image 压缩后的图片 / HDImage 高清图 原图
+ */
++ (void)getImageDataWithAsset:(PHAsset*)asset complete:(void(^)(UIImage*image,UIImage *HDImage))complete;
 
 /**
  获取指定大小的图片
@@ -61,4 +73,15 @@
  跳转到设置界面 
  */
 + (void)jumpToSetting;
+
+/**
+ 弹框
+
+ @param title 标题
+ @param message 消息
+ @param controller 控制器
+ @param isSingle 是否是单个选择
+ */
++ (void)showAlertWithTittle:(NSString*)title message:(NSString*)message showController:(UIViewController*)controller isSingleAction:(BOOL)isSingle complete:(void (^)(NSInteger))complete;
+
 @end

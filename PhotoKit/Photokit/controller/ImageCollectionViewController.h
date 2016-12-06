@@ -19,4 +19,6 @@
  */
 @property (nonatomic, assign) NSUInteger maximumNumberOfSelection;
 @property (nonatomic, copy) NSString *rightItemTitle;
+
+@property (nonatomic, assign) BOOL isAscend;
 @end

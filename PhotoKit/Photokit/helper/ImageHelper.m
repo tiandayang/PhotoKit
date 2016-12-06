@@ -10,12 +10,11 @@
 
 @implementation ImageHelper
 
-+ (void)getAlbumList:(void(^)(NSArray<PHFetchResult *> *albumList))complete
++ (void)getAlbumListWithAscend:(BOOL)isAscend complete:(void(^)(NSArray<PHFetchResult *> *albumList))complete
 {
     PHFetchOptions * allPhotosOptions = [[PHFetchOptions alloc]init];
     
-    allPhotosOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:NO]];
-    
+    allPhotosOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"creationDate" ascending:isAscend]];
         //所有图片的集合
    PHFetchResult * allPhotos = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:allPhotosOptions];
         //自定义的
@@ -31,14 +30,14 @@
     complete?complete(list):nil;
 }
 
-+ (void)getImageDataWithAsset:(PHAsset *)asset complete:(void (^)(UIImage *))complete
++ (void)getImageDataWithAsset:(PHAsset *)asset complete:(void (^)(UIImage *,UIImage*))complete
 {
     PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
     option.synchronous = YES;
     [[PHImageManager defaultManager] requestImageDataForAsset:asset options:option resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
-        UIImage *image = [UIImage imageWithData:imageData];
-        
-        complete?complete(image):nil;
+        UIImage *HDImage = [UIImage imageWithData:imageData];
+        UIImage *image = [UIImage clipImage:HDImage];
+        complete?complete(image,HDImage):nil;
     }];
     
 
@@ -48,9 +47,8 @@
     PHImageManager *imageManager = [PHImageManager defaultManager];
     [imageManager requestImageForAsset:asset targetSize:size contentMode:PHImageContentModeAspectFill options:nil resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            UIImage *image = [result imageCompressForTargetSize:size];
             dispatch_async(dispatch_get_main_queue(), ^{
-                complete?complete(image):nil;
+                complete?complete(result):nil;
             });
         });
     }];
@@ -66,6 +64,21 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
 }
 
++ (void)showAlertWithTittle:(NSString *)title message:(NSString *)message showController:(UIViewController *)controller isSingleAction:(BOOL)isSingle complete:(void (^)(NSInteger))complete{
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancleAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        complete?complete(0):nil;
+    }];
+    
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        complete?complete(1):nil;
+    }];
+    if (!isSingle) {
+        [alertController addAction:cancleAction];
+    }
+    [alertController addAction:confirmAction];
+    [controller presentViewController:alertController animated:YES completion:nil];
+}
 @end
 
 @implementation ImageModel

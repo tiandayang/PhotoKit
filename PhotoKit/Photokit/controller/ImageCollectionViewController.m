@@ -12,13 +12,14 @@
 
 static NSString * const kCellIdentifier = @"ImageCollectionViewCellIdentifier";
 static NSInteger const kItemsOfRow = 3;
-static CGFloat const kItemsSpace = 5.0;
-
+static CGFloat   const kItemsSpace = 2.0;
 @interface ImageCollectionViewController ()<UICollectionViewDelegate,UICollectionViewDataSource,UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (nonatomic,strong)UICollectionView *collectionView;
 
 @property (nonatomic,strong)NSMutableArray *selectArray;
+
+@property (nonatomic,assign)NSInteger photoIndex;  // 拍照按钮应该显示的索引位置
 @end
 
 @implementation ImageCollectionViewController
@@ -42,33 +43,72 @@ static CGFloat const kItemsSpace = 5.0;
     [self loadData];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusNotDetermined) {
+        [self addNotification];
+    }
+}
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self removeNotification];
+}
+
+#pragma mark -  load Data
 - (void)setUpFirstData
 {
     self.selectArray = [NSMutableArray array];
-    self.title = @"相机胶卷";
         if (self.rightItemTitle) {
             [self setRightButtonItemWithTitle:self.rightItemTitle];
     }
-}
-- (void)didClickNavigationBarViewRightButton
-{
-
-    self.okClickComplete ? self.okClickComplete(self.selectArray) : nil;
-    
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)loadData
 {
     [self changeRightItemState];
+    if (self.isAscend) {
+        [self scrollsToBottomAnimated:NO];
+    }
 }
 
 - (void)setAssetResult:(PHFetchResult *)assetResult
 {
     _assetResult = assetResult;
-    [_collectionView reloadData];
+    self.photoIndex = self.isAscend?assetResult.count : 0;
 }
+
+#pragma mark - action
+- (void)didClickNavigationBarViewRightButton
+{
+    if (self.selectArray.count>0) {
+        self.okClickComplete ? self.okClickComplete(self.selectArray) : nil;
+    }
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)appDidBecomeActive:(NSNotification*)notification
+{
+    if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusAuthorized) {
+        [self.navigationController popViewControllerAnimated:NO];
+    }
+    else if ([PHPhotoLibrary authorizationStatus] == PHAuthorizationStatusDenied)
+    {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+#pragma mark - notifications
+- (void)addNotification
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+- (void)removeNotification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
 #pragma mark - UICollectionViewDelegate
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
@@ -78,16 +118,21 @@ static CGFloat const kItemsSpace = 5.0;
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     ImageCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kCellIdentifier forIndexPath:indexPath];
-    if (indexPath.row == 0) {
-        cell.imageView.image  = [UIImage imageNamed:@"ch_camera_photo"];
-        cell.selectImageView.hidden = YES;
-        cell.indexLabel.hidden = YES;
-    }else{
-        PHAsset *asset = self.assetResult[indexPath.row - 1];
-        cell.selectArray = self.selectArray;
-        cell.asset = asset;
-    }
-    return cell;
+        if (indexPath.row == self.photoIndex) {
+            cell.imageView.image  = [UIImage imageNamed:@"ch_camera_photo"];
+            cell.selectImageView.hidden = YES;
+            cell.indexLabel.hidden = YES;
+        }else{
+            PHAsset *asset = nil;
+            if (self.isAscend) {
+            asset = self.assetResult[indexPath.row];
+            }else{
+            asset = self.assetResult[indexPath.row - 1];
+            }
+            cell.selectArray = self.selectArray;
+            cell.asset = asset;
+        }
+        return cell;
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -98,10 +143,9 @@ static CGFloat const kItemsSpace = 5.0;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == 0) {
+    if (indexPath.row == self.photoIndex) {
         if (self.selectArray.count >= self.maximumNumberOfSelection) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"最多只能选择%lu张图片",(unsigned long)self.maximumNumberOfSelection] message:nil delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
-            [alert show];
+            [ImageHelper showAlertWithTittle:[NSString stringWithFormat:@"最多只能选择%lu张图片",(unsigned long)self.maximumNumberOfSelection] message:nil showController:self isSingleAction:YES complete:nil];
             return;
         }
         
@@ -114,11 +158,11 @@ static CGFloat const kItemsSpace = 5.0;
     else{
         
         ImageCollectionViewCell *cell = (ImageCollectionViewCell*)[collectionView cellForItemAtIndexPath:indexPath];
-        if ([cell.asset.selected boolValue]) {
+        if (cell.asset.selected) {
             int count = -1;
             for (ImageModel *subItem in self.selectArray.mutableCopy) {
                 count ++;
-                if ([subItem.identifier isEqualToString:cell.asset.localIdentifier]) {
+                if ([subItem.asset.localIdentifier isEqualToString:cell.asset.localIdentifier]) {
                     [self.selectArray removeObjectAtIndex:count];
                     break;
                 }
@@ -127,12 +171,10 @@ static CGFloat const kItemsSpace = 5.0;
         else{
             
             if (self.selectArray.count >= self.maximumNumberOfSelection) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"最多只能选择%lu张图片",(unsigned long)self.maximumNumberOfSelection] message:nil delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil, nil];
-                [alert show];
+            [ImageHelper showAlertWithTittle:[NSString stringWithFormat:@"最多只能选择%lu张图片",(unsigned long)self.maximumNumberOfSelection] message:nil showController:self isSingleAction:YES complete:nil];
                 return;
             }
             ImageModel *item = [ImageModel new];
-            item.identifier = cell.asset.localIdentifier;
             item.asset = cell.asset;
             [self.selectArray addObject:item];
         }
@@ -146,7 +188,7 @@ static CGFloat const kItemsSpace = 5.0;
     self.collectionView.userInteractionEnabled = NO;
     cell.selectImageView.hidden = !cell.selectImageView.hidden;
     cell.indexLabel.hidden = !cell.indexLabel.hidden;
-    cell.asset.selected = @(![cell.asset.selected boolValue]);
+    cell.asset.selected = !cell.asset.selected;
     cell.indexLabel.text = [NSString stringWithFormat:@"%ld",self.selectArray.count];
     [self changeRightItemState];
     [cell updteImageIsSelected:!cell.selectImageView.hidden complete:^(BOOL isFinish) {
@@ -179,6 +221,7 @@ static CGFloat const kItemsSpace = 5.0;
     [self didClickNavigationBarViewRightButton];
 }
 
+#pragma mark - lazy
 - (NSMutableArray*)selectArray
 {
     if (!_selectArray) {
@@ -216,15 +259,22 @@ static CGFloat const kItemsSpace = 5.0;
         if (self.rightItemTitle) {
             [self setRightButtonItemWithTitle:[self.rightItemTitle stringByAppendingString:[NSString stringWithFormat:@"(%@)", [@(imageCount) stringValue]]]];
         }
-        self.navigationItem.rightBarButtonItem.enabled = YES;
     }else{
-        [self setRightButtonItemWithTitle:self.rightItemTitle];
-        self.navigationItem.rightBarButtonItem.enabled = NO;
+        [self setRightButtonItemWithTitle:@"取消"];
     }
 }
 - (void)setRightButtonItemWithTitle:(NSString *)titleString
 {
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:titleString style:UIBarButtonItemStylePlain target:self action:@selector(didClickNavigationBarViewRightButton)];
 }
-
+- (void)scrollsToBottomAnimated:(BOOL)animated
+{
+    [self.view layoutIfNeeded];
+    CGFloat offset = self.collectionView.contentSize.height - self.collectionView.bounds.size.height;
+    if (offset > 0)
+    {
+        CGFloat width = (WINDOW_WIDTH - (kItemsOfRow -1) * kItemsSpace) / kItemsOfRow;
+        [self.collectionView setContentOffset:CGPointMake(0, offset+ width/2.0) animated:animated];
+    }
+}
 @end

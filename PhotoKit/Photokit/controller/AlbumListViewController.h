@@ -13,5 +13,9 @@
 
 @property (nonatomic, copy) NSString *rightTitle;
 
-@property (nonatomic,assign) NSInteger maxSelectCount;
+@property (nonatomic,assign) NSInteger maxSelectCount; // 可选的最大数量
+
+@property (nonatomic,assign) AlbumType albumType;      // 相册的类型，用途
+
+@property (nonatomic,assign) BOOL isAscend;            // 是否是升序， 相机的位置是顶部还是底部，默认降序 顶部(NO)
 @end

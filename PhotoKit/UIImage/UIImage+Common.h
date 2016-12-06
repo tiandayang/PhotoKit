@@ -34,4 +34,7 @@
 - (UIImage*)scaleToSize:(CGSize)size;
 //  压缩图片 
 -(UIImage *) imageCompressForTargetSize:(CGSize)size;
+// 压缩到指定大小
++ (UIImage *)clipImage:(UIImage*)image;
+
 @end

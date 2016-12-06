@@ -9,8 +9,8 @@
 #import <Photos/Photos.h>
 
 @interface PHAsset (Select)
-@property (nonatomic,assign)id selected;
+@property (nonatomic,assign)BOOL selected;
 
-@property (nonatomic,assign)id thumbImage;
+@property (nonatomic,strong)UIImage *thumbImage;
 
 @end

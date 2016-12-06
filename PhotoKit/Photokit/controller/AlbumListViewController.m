@@ -9,9 +9,9 @@
 #import "AlbumListViewController.h"
 #import "AlbumListTableViewCell.h"
 #import "ImageCollectionViewController.h"
-
+#import "Masonry.h"
 @interface AlbumListViewController ()<UITableViewDelegate,UITableViewDataSource>
-@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic)  UITableView *tableView;
 @property (nonatomic, strong) NSArray *dataArray;
 @end
 
@@ -19,16 +19,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [self createUI];
     self.title = @"相册";
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"取消" style:UIBarButtonItemStylePlain target:self action:@selector(dismiss)];
     
        [self loadAlbums];
     
     if (self.dataArray.count>0) {
-        PHFetchResult *result = (PHFetchResult*)self.dataArray[0];
+        PHFetchResult *result = (PHFetchResult*)self.dataArray.firstObject;
         if (result) {
-            [self jumpToImageDetailWithGroup:result isAnimate:NO];
+            [self jumpToImageDetailWithGroup:result isAnimate:NO title:@"相机胶卷"];
             
         }
         
@@ -47,20 +47,17 @@
 {
     if (![ImageHelper isOpenAuthority]) {
         
-       UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"您未打开照片权限" message:nil preferredStyle:UIAlertControllerStyleAlert];
-               [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self dismiss];
-        }]];
-        [alertController addAction:[UIAlertAction actionWithTitle:@"去设置" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [ImageHelper jumpToSetting];
-        }]];
-
-        [self presentViewController:alertController animated:YES completion:nil];
-
+        [ImageHelper showAlertWithTittle:@"您未打开照片权限"  message:nil showController:self isSingleAction:NO complete:^(NSInteger index) {
+            if (index == 1) {
+                [ImageHelper jumpToSetting];
+            }
+            else{
+                [self dismiss];
+            }
+        }];
         return;
     }
-    
-    [ImageHelper getAlbumList:^(NSArray<PHFetchResult *> *albumList) {
+    [ImageHelper getAlbumListWithAscend:self.isAscend complete:^(NSArray<PHFetchResult *> *albumList) {
         self.dataArray = albumList.mutableCopy;
     }];
 }
@@ -116,11 +113,13 @@
         }
         
     }
-    PHAsset *asset = fetchResult[0];
-    [ImageHelper getImageWithAsset:asset targetSize:CGSizeMake(120,120) complete:^(UIImage *image) {
-        albumListCell.coverImageView.image = image;
-    }];
-    return cell;
+    if (fetchResult.count>0) {
+        PHAsset *asset = fetchResult[0];
+        [ImageHelper getImageWithAsset:asset targetSize:CGSizeMake(120,120) complete:^(UIImage *image) {
+            albumListCell.coverImageView.image = image;
+        }];
+    }
+        return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -143,18 +142,36 @@
         PHAssetCollection * assetCollection = (PHAssetCollection *)collection;
         result = [PHAsset fetchAssetsInAssetCollection:assetCollection options:nil];
     }
-    
-    [self jumpToImageDetailWithGroup:result isAnimate:YES];
+    AlbumListTableViewCell *albumListCell = [tableView cellForRowAtIndexPath:indexPath];
+    [self jumpToImageDetailWithGroup:result isAnimate:YES title:albumListCell.albumNameLabel.text];
 }
 
-- (void)jumpToImageDetailWithGroup:(PHFetchResult *)fetchResult isAnimate:(BOOL)isAnimate
+- (void)jumpToImageDetailWithGroup:(PHFetchResult *)fetchResult isAnimate:(BOOL)isAnimate title:(NSString*)title
 {
     ImageCollectionViewController *imagePickerController = [[ImageCollectionViewController alloc] init];
+    imagePickerController.isAscend = self.isAscend;
     imagePickerController.assetResult = fetchResult;
+    imagePickerController.title = title;
     imagePickerController.rightItemTitle = self.rightTitle ?: @"发送";
     imagePickerController.okClickComplete = self.okClickComplete;
     imagePickerController.maximumNumberOfSelection = self.maxSelectCount;
     [self.navigationController pushViewController:imagePickerController animated:isAnimate];
+}
+
+#pragma mark - createUI
+- (void)createUI{
+    
+    self.tableView = ({
+        UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        tableView.dataSource = self;
+        tableView.delegate = self;
+        [self.view addSubview:tableView];
+        [tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsZero);
+        }];
+        tableView;
+    });
+    
 }
 
 @end

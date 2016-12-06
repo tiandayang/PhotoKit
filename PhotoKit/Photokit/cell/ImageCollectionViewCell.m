@@ -8,7 +8,7 @@
 
 #import "ImageCollectionViewCell.h"
 #import "Masonry.h"
-#define ITEMWIDTH      2 * (WINDOW_WIDTH - 10)/3.0
+#define ITEMWIDTH      2 * (WINDOW_WIDTH - 4)/3.0
 
 @implementation ImageCollectionViewCell
 - (instancetype)initWithFrame:(CGRect)frame
@@ -80,7 +80,7 @@
 - (void)setAsset:(PHAsset *)asset
 {
     _asset = asset;
-    if ([_asset.selected boolValue]) {
+    if (_asset.selected) {
         self.selectImageView.hidden = NO;
         self.indexLabel.hidden = NO;
     }
@@ -91,7 +91,7 @@
         int count = 0;
         for (ImageModel *item in self.selectArray) {
             count ++;
-            if ([item.identifier isEqualToString:_asset.localIdentifier]) {
+            if ([item.asset.localIdentifier isEqualToString:_asset.localIdentifier]) {
                 self.indexLabel.text = [NSString stringWithFormat:@"%d",count];
                 break;
             }

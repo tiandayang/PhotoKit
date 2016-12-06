@@ -378,4 +378,16 @@
     
 }
 
++ (UIImage *)clipImage:(UIImage*)image
+{
+    image = [image imageCompressForTargetSize:CGSizeMake(image.size.width*0.5,image.size.height * 0.5)];
+    NSData *imageData = UIImageJPEGRepresentation(image, 0.8);
+    if (imageData.length>300*1024) {
+        return [self clipImage:image];
+    }
+    image = [UIImage imageWithData:imageData];
+    return image;
+}
+
+
 @end

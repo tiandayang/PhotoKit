@@ -32,7 +32,8 @@ const NSInteger kLeftEdge               = 14;
         
         UIImageView *view = [UIImageView new];
         [self.contentView addSubview:view];
-        
+        view.contentMode = UIViewContentModeScaleAspectFill;
+        view.clipsToBounds = YES;
         view;
         
     });

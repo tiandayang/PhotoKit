@@ -31,6 +31,7 @@
 - (IBAction)presentAlbum:(id)sender {
     AlbumListViewController *albumListVC = [[AlbumListViewController alloc] init];
     albumListVC.maxSelectCount = 5 - self.imageDataArray.count;
+    albumListVC.isAscend = YES;
     albumListVC.rightTitle = @"确定";
     
     __weak ViewController *weakSelf = self;
@@ -40,9 +41,10 @@
             
             [images enumerateObjectsUsingBlock:^(ImageModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 if (obj.asset) {
-                    [ImageHelper getImageDataWithAsset:obj.asset complete:^(UIImage *image) {
+                    [ImageHelper getImageDataWithAsset:obj.asset complete:^(UIImage *image,UIImage*HDImage) {
                         if (image) {
                             [weakSelf.imageDataArray addObject:image];
+                            [weakSelf.imageDataArray addObject:HDImage];
                         }
                     }];
 
