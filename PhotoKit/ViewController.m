@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "ImageHelper.h"
 #import "AlbumListViewController.h"
+#import "ImageViewController.h"
 @interface ViewController ()<UICollectionViewDelegate,UICollectionViewDataSource>
 @property (nonatomic, strong) UICollectionView *collectionView;
 
@@ -30,7 +31,7 @@
 
 - (IBAction)presentAlbum:(id)sender {
     AlbumListViewController *albumListVC = [[AlbumListViewController alloc] init];
-    albumListVC.maxSelectCount = 5 - self.imageDataArray.count;
+    albumListVC.maxSelectCount = 9;
     albumListVC.isAscend = YES;
     albumListVC.rightTitle = @"确定";
     
@@ -44,7 +45,7 @@
                     [ImageHelper getImageDataWithAsset:obj.asset complete:^(UIImage *image,UIImage*HDImage) {
                         if (image) {
                             [weakSelf.imageDataArray addObject:image];
-                            [weakSelf.imageDataArray addObject:HDImage];
+//                            [weakSelf.imageDataArray addObject:HDImage];
                         }
                     }];
 
@@ -75,18 +76,28 @@
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:self.imageDataArray[indexPath.row]];
-    imageView.contentMode = UIViewContentModeScaleAspectFit;
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.clipsToBounds = YES;
     cell.backgroundView = imageView;
     return cell;
     
 }
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+    ImageViewController *imageVC = [[ImageViewController alloc] init];
+    imageVC.clickedView = (UIImageView*)cell.backgroundView;
+    [self presentViewController:imageVC animated:YES completion:nil];
+}
+
 - (void)createUI{
     
     self.collectionView = ({
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
-        layout.itemSize = self.view.frame.size;
+        layout.itemSize =CGSizeMake(WINDOW_WIDTH, WINDOW_WIDTH);
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
         collectionView.pagingEnabled = YES;
