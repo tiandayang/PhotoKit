@@ -8,7 +8,7 @@
 
 #import "ImageViewController.h"
 #import "ImagePreviewtransition.h"
-#define  kMaxImageScale 2
+#define  kMaxImageScale 3
 
 @interface ImageViewController ()<UIViewControllerTransitioningDelegate,UIGestureRecognizerDelegate>
 @property (nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
