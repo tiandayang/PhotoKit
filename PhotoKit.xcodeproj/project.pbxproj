@@ -25,8 +25,8 @@
 		7E026BA81DDC044E00F576A4 /* ImageCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E026B9E1DDC044E00F576A4 /* ImageCollectionViewController.m */; };
 		7E026BA91DDC044E00F576A4 /* ImageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E026BA11DDC044E00F576A4 /* ImageHelper.m */; };
 		7E026BAA1DDC044E00F576A4 /* PHAsset+Select.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E026BA31DDC044E00F576A4 /* PHAsset+Select.m */; };
-		7E28FD921DF953F5003C45D6 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E28FD8F1DF953F5003C45D6 /* ImageViewController.m */; };
-		7E28FD931DF953F5003C45D6 /* ImagePreviewtransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E28FD911DF953F5003C45D6 /* ImagePreviewtransition.m */; };
+		7E3F19071DFA6884006782B9 /* ImagePreviewtransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E3F19041DFA6884006782B9 /* ImagePreviewtransition.m */; };
+		7E3F19081DFA6884006782B9 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E3F19061DFA6884006782B9 /* ImageViewController.m */; };
 		7E5BBE811DD99BBC00A295B9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E5BBE801DD99BBC00A295B9 /* main.m */; };
 		7E5BBE841DD99BBC00A295B9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E5BBE831DD99BBC00A295B9 /* AppDelegate.m */; };
 		7E5BBE871DD99BBC00A295B9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E5BBE861DD99BBC00A295B9 /* ViewController.m */; };
@@ -76,10 +76,10 @@
 		7E026BA11DDC044E00F576A4 /* ImageHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageHelper.m; sourceTree = "<group>"; };
 		7E026BA21DDC044E00F576A4 /* PHAsset+Select.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PHAsset+Select.h"; sourceTree = "<group>"; };
 		7E026BA31DDC044E00F576A4 /* PHAsset+Select.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PHAsset+Select.m"; sourceTree = "<group>"; };
-		7E28FD8E1DF953F5003C45D6 /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
-		7E28FD8F1DF953F5003C45D6 /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
-		7E28FD901DF953F5003C45D6 /* ImagePreviewtransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagePreviewtransition.h; sourceTree = "<group>"; };
-		7E28FD911DF953F5003C45D6 /* ImagePreviewtransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagePreviewtransition.m; sourceTree = "<group>"; };
+		7E3F19031DFA6884006782B9 /* ImagePreviewtransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagePreviewtransition.h; sourceTree = "<group>"; };
+		7E3F19041DFA6884006782B9 /* ImagePreviewtransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagePreviewtransition.m; sourceTree = "<group>"; };
+		7E3F19051DFA6884006782B9 /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
+		7E3F19061DFA6884006782B9 /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
 		7E5BBE7C1DD99BBC00A295B9 /* PhotoKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E5BBE801DD99BBC00A295B9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7E5BBE821DD99BBC00A295B9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -192,6 +192,17 @@
 			path = helper;
 			sourceTree = "<group>";
 		};
+		7E3F19021DFA6884006782B9 /* PhotoPreview */ = {
+			isa = PBXGroup;
+			children = (
+				7E3F19031DFA6884006782B9 /* ImagePreviewtransition.h */,
+				7E3F19041DFA6884006782B9 /* ImagePreviewtransition.m */,
+				7E3F19051DFA6884006782B9 /* ImageViewController.h */,
+				7E3F19061DFA6884006782B9 /* ImageViewController.m */,
+			);
+			path = PhotoPreview;
+			sourceTree = "<group>";
+		};
 		7E5BBE731DD99BBC00A295B9 = {
 			isa = PBXGroup;
 			children = (
@@ -211,16 +222,13 @@
 		7E5BBE7E1DD99BBC00A295B9 /* PhotoKit */ = {
 			isa = PBXGroup;
 			children = (
+				7E3F19021DFA6884006782B9 /* PhotoPreview */,
 				7E026B931DDC044E00F576A4 /* Photokit */,
 				7E026B5A1DDBF45200F576A4 /* Masonry */,
 				7E5BBE821DD99BBC00A295B9 /* AppDelegate.h */,
 				7E5BBE831DD99BBC00A295B9 /* AppDelegate.m */,
 				7E5BBE851DD99BBC00A295B9 /* ViewController.h */,
 				7E5BBE861DD99BBC00A295B9 /* ViewController.m */,
-				7E28FD8E1DF953F5003C45D6 /* ImageViewController.h */,
-				7E28FD8F1DF953F5003C45D6 /* ImageViewController.m */,
-				7E28FD901DF953F5003C45D6 /* ImagePreviewtransition.h */,
-				7E28FD911DF953F5003C45D6 /* ImagePreviewtransition.m */,
 				7E5BBE881DD99BBC00A295B9 /* Main.storyboard */,
 				7E5BBE8B1DD99BBC00A295B9 /* Assets.xcassets */,
 				7E5BBE8D1DD99BBC00A295B9 /* LaunchScreen.storyboard */,
@@ -315,8 +323,8 @@
 				7E666D361DF6A6010068BDB0 /* UIImage+Clip.m in Sources */,
 				7E026B7D1DDBF45200F576A4 /* MASViewConstraint.m in Sources */,
 				7E026BA51DDC044E00F576A4 /* ImageCollectionViewCell.m in Sources */,
-				7E28FD921DF953F5003C45D6 /* ImageViewController.m in Sources */,
 				7E026BA91DDC044E00F576A4 /* ImageHelper.m in Sources */,
+				7E3F19081DFA6884006782B9 /* ImageViewController.m in Sources */,
 				7E026BA81DDC044E00F576A4 /* ImageCollectionViewController.m in Sources */,
 				7E5BBE871DD99BBC00A295B9 /* ViewController.m in Sources */,
 				7E026B7A1DDBF45200F576A4 /* MASConstraintMaker.m in Sources */,
@@ -327,11 +335,11 @@
 				7E026B821DDBF45200F576A4 /* README.md in Sources */,
 				7E026B791DDBF45200F576A4 /* MASConstraint.m in Sources */,
 				7E026B7C1DDBF45200F576A4 /* MASViewAttribute.m in Sources */,
+				7E3F19071DFA6884006782B9 /* ImagePreviewtransition.m in Sources */,
 				7E026B7F1DDBF45200F576A4 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				7E5BBE811DD99BBC00A295B9 /* main.m in Sources */,
 				7E026BA41DDC044E00F576A4 /* AlbumListTableViewCell.m in Sources */,
 				7E026B781DDBF45200F576A4 /* MASCompositeConstraint.m in Sources */,
-				7E28FD931DF953F5003C45D6 /* ImagePreviewtransition.m in Sources */,
 				7E026B7B1DDBF45200F576A4 /* MASLayoutConstraint.m in Sources */,
 				7E026B811DDBF45200F576A4 /* ViewController+MASAdditions.m in Sources */,
 			);

@@ -311,5 +311,4 @@
     return [[ImagePreviewtransition alloc] initWithClickView:self.clickedView];
 }
 
-
 @end
